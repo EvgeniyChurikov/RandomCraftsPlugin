@@ -1,0 +1,13 @@
+name: RandomCraftsPlugin
+version: ${project.version}
+main: me.needenoughsleep.randomcraftsplugin.RandomCraftsPlugin
+api-version: 1.16
+authors: [ NeedEnoughSleep ]
+commands:
+  randomcrafts:
+    usage: /<command> <randomize|reload>
+    aliases: [ rc ]
+    permission: randomcraftsplugin.command.randomcrafts
+permissions:
+  randomcraftsplugin.command.randomcrafts:
+    default: op
