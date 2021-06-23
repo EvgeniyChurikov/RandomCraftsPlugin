@@ -23,6 +23,7 @@ public final class RandomCraftsPlugin extends JavaPlugin implements Listener {
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
         Objects.requireNonNull(getCommand("randomcrafts")).setExecutor(this);
+        getDataFolder().mkdir();
         load();
     }
 
