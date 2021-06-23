@@ -6,7 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,16 +19,9 @@ public final class RandomCraftsPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        configInit();
         getServer().getPluginManager().registerEvents(this, this);
         Objects.requireNonNull(getCommand("randomcrafts")).setExecutor(this);
         randomize();
-    }
-
-    private void configInit() {
-        getConfig().addDefault("randomize-furnace-recipes", false);
-        getConfig().options().copyDefaults(true);
-        saveConfig();
     }
 
     @EventHandler
@@ -40,24 +32,13 @@ public final class RandomCraftsPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    @EventHandler
-    public void onSmelt(FurnaceSmeltEvent e) {
-        if (!getConfig().getBoolean("randomize-furnace-recipes"))
-            return;
-        ItemStack newResult = data.get(e.getResult());
-        if (newResult != null) {
-            e.setResult(newResult);
-        }
-    }
-
     public void randomize() {
         data.clear();
         Iterator<Recipe> recipeIterator = getServer().recipeIterator();
         while (recipeIterator.hasNext()) {
             Recipe recipe = recipeIterator.next();
             if (recipe instanceof ShapedRecipe
-                    || recipe instanceof ShapelessRecipe
-                    || (recipe instanceof FurnaceRecipe && getConfig().getBoolean("randomize-furnace-recipes"))) {
+                    || recipe instanceof ShapelessRecipe) {
                 ItemStack newResult = new ItemStack(recipe.getResult().getType(), recipe.getResult().getAmount());
                 data.put(newResult, newResult);
             }
@@ -81,7 +62,6 @@ public final class RandomCraftsPlugin extends JavaPlugin implements Listener {
             return true;
         }
         if (command.equalsIgnoreCase("reload")) {
-            reloadConfig();
             getServer().sendMessage(Component.text("Config reloaded").color(TextColor.color(0, 255, 0)));
             return true;
         }
